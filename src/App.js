@@ -2,19 +2,34 @@ import React, { Component } from "react";
 import "./App.css";
 
 import getMovie from "./actions/movie";
+import {
+    Container,
+    Menu,
+    Pagination,
+    Grid,
+    Image,
+    Header
+} from "semantic-ui-react";
+import MovieDetail from "./components/MovieDetail";
+import shortid from "shortid";
 
 class App extends Component {
     state = {
         movie: [],
         shows: null,
-        isLoading: false
+        isLoading: false,
+        total_pages: null,
+        active_pages: 1,
+        movie_detail: false,
+        movie_selected: null
     };
     async componentDidMount() {
         this.setState({ isLoading: !this.state.isLoading });
         let movie = await getMovie();
         this.setState({
             ...this.state,
-            movie: movie.results
+            movie: movie.results,
+            total_pages: movie.total_pages
         });
         for (let i = 1; i < movie.total_pages; ++i) {
             let element = await getMovie(i + 1);
@@ -27,18 +42,72 @@ class App extends Component {
         }
         this.setState({ isLoading: !this.state.isLoading });
     }
+    posterClick = e => {
+        // console.log(e.target.dataset.id || null);
+        let find = this.state.movie.filter(
+            item => +item.id === +e.target.dataset.id
+        );
+        console.log(find["0"]);
+
+        this.setState({
+            movie_selected: find["0"] || null,
+            movie_detail: !this.state.movie_detail
+        });
+    };
+    showPoster() {
+        return this.state.movie.map(e => {
+            return (
+                <Grid.Column
+                    mobile={8}
+                    tablet={4}
+                    computer={3}
+                    key={shortid.generate()}
+                >
+                    <Image
+                        src={`http://image.tmdb.org/t/p/w342${e.poster_path}`}
+                        size="medium"
+                        rounded
+                        className="posterPrev"
+                        alt={e.title}
+                        data-id={e.id}
+                        centered
+                        onClick={this.posterClick}
+                    />
+                </Grid.Column>
+            );
+        });
+    }
     render() {
-        console.log(this.state.movie.map(e=> e.backdrop_path));
+        // console.log(this.state.movie["0"]);
         return (
-            <div className="App">
-                <header className="App-header">
-                    <h1 className="App-title">Welcome to React</h1>
-                </header>
-                <p className="App-intro">
-                    To get started, edit <code>src/App.js</code> and save to
-                    reload.
-                </p>
-            </div>
+            <Container className="App">
+                <Menu>
+                    <Menu.Item>
+                        <Header>
+                            <Image src="/img/logo.png" /> Movie
+                        </Header>
+                    </Menu.Item>
+                    <Menu.Menu position="right" />
+                </Menu>
+                <Grid centered>
+                    {/* <Grid.Row columns={6}> */}
+                    {this.showPoster()}
+                    {/* </Grid.Row> */}
+                </Grid>
+                {this.state.total_pages > 1 ? (
+                    <Pagination
+                        totalPages={this.state.total_pages}
+                        activePage={this.state.active_pages}
+                    />
+                ) : (
+                    ""
+                )}
+                <MovieDetail
+                    open={this.state.movie_detail}
+                    close={this.posterClick}
+                    mov={this.state.movie_selected}
+                />
+            </Container>
         );
     }
 }

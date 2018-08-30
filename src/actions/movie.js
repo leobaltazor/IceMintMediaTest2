@@ -1,4 +1,4 @@
-import MOVIES_LIST from "../types/movie";
+// import MOVIES_LIST from "../types/movie";
 import { apiKey } from "../config/config";
 
 export default function getMovie(

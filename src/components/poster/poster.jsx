@@ -3,8 +3,16 @@ import { string } from "prop-types";
 
 import "./style.css";
 
-const Poster = ({ imgurl, movieTitle }) => {
-    return <img className="poster-prev" src={imgurl} alt={movieTitle} />;
+const Poster = ({ imgurl, movieTitle, action, movieId }) => {
+    return (
+        <img
+            className="posterPrev"
+            src={imgurl}
+            alt={movieTitle}
+            onClick={action}
+            data-id={movieId}
+        />
+    );
 };
 
 Poster.protoTypes = {
