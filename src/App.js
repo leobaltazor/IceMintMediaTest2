@@ -12,6 +12,7 @@ import {
 } from "semantic-ui-react";
 import MovieDetail from "./components/MovieDetail";
 import shortid from "shortid";
+import Poster from "./components/Poster";
 
 class App extends Component {
     state = {
@@ -63,7 +64,8 @@ class App extends Component {
                     computer={3}
                     key={shortid.generate()}
                 >
-                    <Image
+                    <Poster e={e} action={this.posterClick} />
+                    {/* <Image
                         src={`http://image.tmdb.org/t/p/w342${e.poster_path}`}
                         size="medium"
                         rounded
@@ -72,7 +74,7 @@ class App extends Component {
                         data-id={e.id}
                         centered
                         onClick={this.posterClick}
-                    />
+                    /> */}
                 </Grid.Column>
             );
         });
@@ -90,23 +92,27 @@ class App extends Component {
                     <Menu.Menu position="right" />
                 </Menu>
                 <Grid centered>
-                    {/* <Grid.Row columns={6}> */}
                     {this.showPoster()}
-                    {/* </Grid.Row> */}
+                    <Grid.Row columns={6}>
+                        {this.state.total_pages > 1 ? (
+                            <Pagination
+                                totalPages={this.state.total_pages}
+                                activePage={this.state.active_pages}
+                            />
+                        ) : (
+                            ""
+                        )}
+                    </Grid.Row>
                 </Grid>
-                {this.state.total_pages > 1 ? (
-                    <Pagination
-                        totalPages={this.state.total_pages}
-                        activePage={this.state.active_pages}
+                {this.state.movie_detail ? (
+                    <MovieDetail
+                        open={this.state.movie_detail}
+                        close={this.posterClick}
+                        mov={this.state.movie_selected}
                     />
                 ) : (
                     ""
                 )}
-                <MovieDetail
-                    open={this.state.movie_detail}
-                    close={this.posterClick}
-                    mov={this.state.movie_selected}
-                />
             </Container>
         );
     }

@@ -1,23 +1,17 @@
 import React from "react";
-import { string } from "prop-types";
+import { Image } from "semantic-ui-react";
 
-import "./style.css";
-
-const Poster = ({ imgurl, movieTitle, action, movieId }) => {
-    return (
-        <img
-            className="posterPrev"
-            src={imgurl}
-            alt={movieTitle}
-            onClick={action}
-            data-id={movieId}
-        />
-    );
-};
-
-Poster.protoTypes = {
-    imgurl: string,
-    movieTitle: string
-};
+const Poster = ({ e, action }) => (
+    <Image
+        src={`http://image.tmdb.org/t/p/w342${e.poster_path}`}
+        size="medium"
+        rounded
+        className="posterPrev"
+        alt={e.title}
+        data-id={e.id}
+        centered
+        onClick={action}
+    />
+);
 
 export default Poster;
