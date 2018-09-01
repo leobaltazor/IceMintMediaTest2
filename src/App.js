@@ -2,8 +2,8 @@ import React, { Component } from "react";
 import "./App.css";
 
 import getMovie from "./actions/movie";
-import { Container, Pagination, Grid } from "semantic-ui-react";
-import { MovieDetail, Poster } from "./components";
+import { Container, Pagination, Grid, Loader, Dimmer } from "semantic-ui-react";
+import { MovieDetail, Poster, TopMenu } from "./components";
 import shortid from "shortid";
 
 class App extends Component {
@@ -16,22 +16,36 @@ class App extends Component {
         movie_detail: false,
         movie_selected: null
     };
-    async componentDidMount() {
-        this.setState({ isLoading: !this.state.isLoading });
-        let movie = await getMovie();
-        this.setState({
-            ...this.state,
-            movie: movie.results,
-            total_pages: movie.total_pages
-        });
-        this.setState({ isLoading: !this.state.isLoading });
+    componentDidMount() {
+        this.LoadMovie();
     }
+    componentWillUpdate() {
+        this.LoadMovie();
+    }
+    async LoadMovie() {
+        let { active_pages } = this.state;
+        this.setState({ isLoading: !this.state.isLoading });
+        // console.log(active_pages);
+        let movie = await getMovie(active_pages);
+        setTimeout(() => {
+            this.setState({
+                ...this.state,
+                movie: movie.results,
+                total_pages: movie.total_pages
+            });
+            this.setState({ isLoading: !this.state.isLoading });
+        }, 1000);
+    }
+    ChangePage = e => {
+        let page = e.target.getAttribute("value");
+        this.setState({
+            active_pages: +page
+        });
+    };
     posterClick = e => {
         let find = this.state.movie.filter(
             item => +item.id === +e.target.dataset.id
         );
-        console.log(find["0"]);
-
         this.setState({
             movie_selected: find["0"] || null,
             movie_detail: !this.state.movie_detail
@@ -51,22 +65,34 @@ class App extends Component {
             );
         });
     }
+    MovieGrid() {
+        return (
+            <Grid centered>
+                {this.showPoster()}
+                <Grid.Row columns={6}>
+                    {this.state.total_pages > 1 ? (
+                        <Pagination
+                            onPageChange={this.ChangePage}
+                            totalPages={this.state.total_pages}
+                            activePage={this.state.active_pages}
+                        />
+                    ) : (
+                        ""
+                    )}
+                </Grid.Row>
+            </Grid>
+        );
+    }
     render() {
+        console.log(this.state.isLoading);
+
         return (
             <Container className="App">
-                <Grid centered>
-                    {this.showPoster()}
-                    <Grid.Row columns={6}>
-                        {this.state.total_pages > 1 ? (
-                            <Pagination
-                                totalPages={this.state.total_pages}
-                                activePage={this.state.active_pages}
-                            />
-                        ) : (
-                            ""
-                        )}
-                    </Grid.Row>
-                </Grid>
+                <TopMenu />
+                <Dimmer active={this.state.isLoading}>
+                    <Loader content="Loading" />
+                </Dimmer>
+                {this.MovieGrid()}
                 {this.state.movie_detail ? (
                     <MovieDetail
                         open={this.state.movie_detail}
