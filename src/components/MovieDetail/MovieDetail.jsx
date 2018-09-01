@@ -1,5 +1,5 @@
 import React from "react";
-import { Header, Modal, Divider, Item, Segment } from "semantic-ui-react";
+import { Modal, Divider, Item, Segment } from "semantic-ui-react";
 import Poster from "../Poster";
 
 import './style.css'
@@ -27,14 +27,8 @@ const MovieDetail = ({ open, close, mov }) => (
                             {mov.overview}
                             <Divider />
                         </Item.Description>
-                        <Item.Extra>Additional Details</Item.Extra>
                     </Item.Content>
                 </Item>
-                {/* <Header>{mov.title}</Header>
-                Score {mov.popularity}
-                <Divider vertical />
-                Rating ???? Release Date {mov.release_date}
-                {mov.overview} */}
             </Modal.Description>
         </Modal.Content>
     </Modal>
