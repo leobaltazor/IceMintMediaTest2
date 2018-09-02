@@ -24,7 +24,7 @@ const MovieDetail = ({ open, close, mov }) => (
                         </Item.Meta>
                         <Item.Description>
                             <Divider />
-                            {mov.overview}
+                            {mov.overview ? mov.overview: "Description not available in selected language"}
                             <Divider />
                         </Item.Description>
                     </Item.Content>

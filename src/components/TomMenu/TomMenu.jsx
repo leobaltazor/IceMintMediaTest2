@@ -12,25 +12,59 @@ const TopMenu = ({ language, region, action }) => (
             <Dropdown item text="My Account " icon="angle down">
                 <Dropdown.Menu>
                     <Dropdown.Item>
-                        <span className="text">Country</span>
-                        <span className="text"> </span>
-                        <Dropdown
-                            text={region}
-                            compact
-                            selection
-                            options={[
-                                { key: "ua", text: "ua", value: "ua" },
-                                { key: "us", text: "us", value: "us" }
-                            ]}
-                            onClick={action()}
-                        />
+                        <Dropdown text="Country" icon="angle left">
+                            <Dropdown.Menu>
+                                <Dropdown.Item
+                                    onClick={(e, d) => {
+                                        action(e, d, "region");
+                                    }}
+                                    value="ua"
+                                    active={region === "ua"}
+                                    text="Ukraine"
+                                    flag="ua"
+                                />
+                                <Dropdown.Item
+                                    onClick={(e, d) => {
+                                        action(e, d, "region");
+                                    }}
+                                    value="us"
+                                    active={region === "us"}
+                                    text="United States"
+                                    flag="us"
+                                />
+                            </Dropdown.Menu>
+                        </Dropdown>
                     </Dropdown.Item>
                     <Dropdown.Item>
                         <Dropdown text="Language" icon="angle left">
                             <Dropdown.Menu>
-                                <Dropdown.Item text="Ukraine" flag="ua" />
-                                <Dropdown.Item text="United States" flag="us" />
-                                <Dropdown.Item text="Russia" flag="ru" />
+                                <Dropdown.Item
+                                    text="Ukraine"
+                                    flag="ua"
+                                    onClick={(e, d) => {
+                                        action(e, d, "language");
+                                    }}
+                                    value="uk-UA"
+                                    active={language === "uk-UA"}
+                                />
+                                <Dropdown.Item
+                                    text="United States"
+                                    flag="us"
+                                    onClick={(e, d) => {
+                                        action(e, d, "language");
+                                    }}
+                                    value="en-US"
+                                    active={language === "en-US"}
+                                />
+                                <Dropdown.Item
+                                    text="Russia"
+                                    flag="ru"
+                                    onClick={(e, d) => {
+                                        action(e, d, "language");
+                                    }}
+                                    value="ru-RU"
+                                    active={language === "ru-RU"}
+                                />
                             </Dropdown.Menu>
                         </Dropdown>
                     </Dropdown.Item>

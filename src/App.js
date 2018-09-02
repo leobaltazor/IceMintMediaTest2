@@ -16,14 +16,16 @@ class App extends Component {
         movie_detail: false,
         movie_selected: null,
         region: "ua",
-        language: "ru-RU"
+        language: "uk-UA"
     };
     componentDidMount() {
         this.LoadMovie();
     }
-    async LoadMovie(page, type, movie_id) {
+    async LoadMovie(page, type, movie_id, lng, country) {
         let { active_pages, language, region } = this.state;
         active_pages = page || active_pages;
+        language = lng || language;
+        region = country || region;
         this.setState({ isLoading: !this.state.isLoading });
         let movie = await getMovie(
             active_pages,
@@ -32,23 +34,30 @@ class App extends Component {
             language,
             region
         );
-        // Timeout for emulating a long response from the server
-        setTimeout(() => {
-            this.setState({
-                ...this.state,
-                movie: movie.results,
-                total_pages: movie.total_pages
-            });
-            this.setState({ isLoading: !this.state.isLoading });
-        }, 1000);
+        this.setState({
+            ...this.state,
+            movie: movie.results,
+            total_pages: movie.total_pages
+        });
+        this.setState({ isLoading: !this.state.isLoading });
     }
     ChangePage = e => {
         let page = e.target.getAttribute("value");
         this.setState({
+            movie: [],
             active_pages: +page
         });
         this.LoadMovie(page);
     };
+    getCert() {
+        return getMovie(
+            null,
+            "release_dates",
+            this.state.movie_selected.id,
+            this.state.language,
+            null
+        );
+    }
     posterClick = e => {
         let find = this.state.movie.filter(
             item => +item.id === +e.target.dataset.id
@@ -75,8 +84,25 @@ class App extends Component {
     MovieGrid() {
         return <Grid centered>{this.showPoster()}</Grid>;
     }
-    ChangeLng = lng => {
-        console.log(lng);
+    ChangeLng = (event, data, name) => {
+        console.log(event.currentTarget);
+        console.log(data.value);
+        console.log(name);
+        if (name === "region") {
+            let region = data.value;
+            this.setState({
+                region: region
+            });
+            this.LoadMovie(1, null, null, null, region);
+        } else if (name === "language") {
+            let language = data.value;
+            this.setState({
+                language: language
+            });
+            console.log(language);
+
+            this.LoadMovie(this.state.active_pages, null, null, language);
+        }
     };
     render() {
         return (
@@ -90,7 +116,7 @@ class App extends Component {
                     loading={this.state.isLoading}
                     basic
                     inverted={this.state.isLoading}
-                    style={{ minHeight: "300px", transition: "1s ease" }}
+                    style={{ minHeight: "50px", transition: "1s ease" }}
                 >
                     {this.MovieGrid()}
                 </Segment>
