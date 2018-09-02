@@ -85,12 +85,10 @@ class App extends Component {
         return <Grid centered>{this.showPoster()}</Grid>;
     }
     ChangeLng = (event, data, name) => {
-        console.log(event.currentTarget);
-        console.log(data.value);
-        console.log(name);
         if (name === "region") {
             let region = data.value;
             this.setState({
+                active_pages: 1,
                 region: region
             });
             this.LoadMovie(1, null, null, null, region);
