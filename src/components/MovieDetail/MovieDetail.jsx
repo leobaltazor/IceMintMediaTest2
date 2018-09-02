@@ -15,7 +15,7 @@ const MovieDetail = ({ open, close, mov }) => (
                         <Item.Header as="h2">{mov.title}</Item.Header>
                         <Item.Meta>
                             <Segment.Group horizontal compact>
-                                <Segment>Score {mov.popularity}</Segment>
+                                <Segment>Score {mov.vote_average}</Segment>
                                 <Segment>Rating ????</Segment>
                                 <Segment>
                                     Release Date {mov.release_date}

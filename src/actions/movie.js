@@ -2,11 +2,11 @@
 import { apiKey } from "../config/config";
 
 export default function getMovie(
-    page = "1",
+    page,
     type = "now_playing",
     movie_id = "",
-    language = "uk-UA",
-    region = "ua"
+    language,
+    region
 ) {
     const url = "http://api.themoviedb.org/3/movie/";
     const api_key = `?api_key=${apiKey}`;

@@ -14,15 +14,24 @@ class App extends Component {
         total_pages: null,
         active_pages: 1,
         movie_detail: false,
-        movie_selected: null
+        movie_selected: null,
+        region: "ua",
+        language: "ru-RU"
     };
     componentDidMount() {
         this.LoadMovie();
     }
-    async LoadMovie(page) {
-        let active_pages = page;
+    async LoadMovie(page, type, movie_id) {
+        let { active_pages, language, region } = this.state;
+        active_pages = page || active_pages;
         this.setState({ isLoading: !this.state.isLoading });
-        let movie = await getMovie(active_pages);
+        let movie = await getMovie(
+            active_pages,
+            type,
+            movie_id,
+            language,
+            region
+        );
         // Timeout for emulating a long response from the server
         setTimeout(() => {
             this.setState({
@@ -55,7 +64,7 @@ class App extends Component {
                 <Grid.Column
                     mobile={8}
                     tablet={4}
-                    computer={3}
+                    computer={2}
                     key={shortid.generate()}
                 >
                     <Poster e={e} action={this.posterClick} />
@@ -66,12 +75,17 @@ class App extends Component {
     MovieGrid() {
         return <Grid centered>{this.showPoster()}</Grid>;
     }
+    ChangeLng = lng => {
+        console.log(lng);
+    };
     render() {
-        console.log(this.state.isLoading);
-
         return (
             <Container className="App">
-                <TopMenu />
+                <TopMenu
+                    language={this.state.language}
+                    region={this.state.region}
+                    action={this.ChangeLng}
+                />
                 <Segment
                     loading={this.state.isLoading}
                     basic
