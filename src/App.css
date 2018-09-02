@@ -16,3 +16,6 @@
     box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.75);
     cursor: initial;
 }
+.ui.menu .item.custom-pagination {
+    color: #55c3aa;
+}

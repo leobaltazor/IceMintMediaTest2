@@ -2,9 +2,10 @@ import React, { Component } from "react";
 import "./App.css";
 
 import getMovie from "./actions/movie";
-import { Container, Pagination, Grid, Loader, Dimmer } from "semantic-ui-react";
+import { Container, Pagination, Grid, Segment } from "semantic-ui-react";
 import { MovieDetail, Poster, TopMenu } from "./components";
 import shortid from "shortid";
+import { height } from "window-size";
 
 class App extends Component {
     state = {
@@ -19,14 +20,11 @@ class App extends Component {
     componentDidMount() {
         this.LoadMovie();
     }
-    componentWillUpdate() {
-        this.LoadMovie();
-    }
-    async LoadMovie() {
-        let { active_pages } = this.state;
+    async LoadMovie(page) {
+        let active_pages = page;
         this.setState({ isLoading: !this.state.isLoading });
-        // console.log(active_pages);
         let movie = await getMovie(active_pages);
+        // Timeout for emulating a long response from the server
         setTimeout(() => {
             this.setState({
                 ...this.state,
@@ -41,6 +39,7 @@ class App extends Component {
         this.setState({
             active_pages: +page
         });
+        this.LoadMovie(page);
     };
     posterClick = e => {
         let find = this.state.movie.filter(
@@ -66,22 +65,7 @@ class App extends Component {
         });
     }
     MovieGrid() {
-        return (
-            <Grid centered>
-                {this.showPoster()}
-                <Grid.Row columns={6}>
-                    {this.state.total_pages > 1 ? (
-                        <Pagination
-                            onPageChange={this.ChangePage}
-                            totalPages={this.state.total_pages}
-                            activePage={this.state.active_pages}
-                        />
-                    ) : (
-                        ""
-                    )}
-                </Grid.Row>
-            </Grid>
-        );
+        return <Grid centered>{this.showPoster()}</Grid>;
     }
     render() {
         console.log(this.state.isLoading);
@@ -89,10 +73,34 @@ class App extends Component {
         return (
             <Container className="App">
                 <TopMenu />
-                <Dimmer active={this.state.isLoading}>
-                    <Loader content="Loading" />
-                </Dimmer>
-                {this.MovieGrid()}
+                <Segment
+                    loading={this.state.isLoading}
+                    basic
+                    inverted={this.state.isLoading}
+                    style={{ minHeight: "300px", transition: "height 1s ease" }}
+                >
+                    {this.MovieGrid()}
+                </Segment>
+                {/* <Segment> */}
+                <Grid centered>
+                    <Grid.Row columns={6}>
+                        {this.state.total_pages > 1 ? (
+                            <Pagination
+                                firstItem={{
+                                    "aria-label": "First item",
+                                    content: "«",
+                                    className: "custom-pagination"
+                                }}
+                                onPageChange={this.ChangePage}
+                                totalPages={this.state.total_pages}
+                                activePage={this.state.active_pages}
+                            />
+                        ) : (
+                            ""
+                        )}
+                    </Grid.Row>
+                </Grid>
+                {/* </Segment> */}
                 {this.state.movie_detail ? (
                     <MovieDetail
                         open={this.state.movie_detail}
