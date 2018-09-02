@@ -16,7 +16,6 @@ export default function getMovie(
     language = language ? `&language=${language}` : "";
     movie_id = movie_id ? `${movie_id}/` : "";
     const request = `${url}${movie_id}${type}${api_key}${language}${region}${page}`;
-    console.log(request);
     return fetch(request)
         .then(res => {
             return res.ok ? res.json() : "error";
