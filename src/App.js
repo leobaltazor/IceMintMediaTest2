@@ -5,7 +5,6 @@ import getMovie from "./actions/movie";
 import { Container, Pagination, Grid, Segment } from "semantic-ui-react";
 import { MovieDetail, Poster, TopMenu } from "./components";
 import shortid from "shortid";
-import { height } from "window-size";
 
 class App extends Component {
     state = {
@@ -77,7 +76,7 @@ class App extends Component {
                     loading={this.state.isLoading}
                     basic
                     inverted={this.state.isLoading}
-                    style={{ minHeight: "300px", transition: "height 1s ease" }}
+                    style={{ minHeight: "300px", transition: "1s ease" }}
                 >
                     {this.MovieGrid()}
                 </Segment>
@@ -88,8 +87,22 @@ class App extends Component {
                             <Pagination
                                 firstItem={{
                                     "aria-label": "First item",
-                                    content: "«",
+                                    content: "First",
                                     className: "custom-pagination"
+                                }}
+                                lastItem={{
+                                    "aria-label": "Last item",
+                                    content: "Last",
+                                    className: "custom-pagination"
+                                }}
+                                nextItem={{
+                                    "aria-label": "Next item",
+                                    content: "Next"
+                                }}
+                                prevItem={{
+                                    "aria-label": "Previous item",
+                                    content: "Prev",
+                                    color: "pink"
                                 }}
                                 onPageChange={this.ChangePage}
                                 totalPages={this.state.total_pages}

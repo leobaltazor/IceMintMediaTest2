@@ -1,3 +1,6 @@
+.App {
+    padding-bottom: 50vh;
+}
 .posterPrev {
     border-radius: 5px;
     transition: 0.3s ease;
@@ -18,4 +21,8 @@
 }
 .ui.menu .item.custom-pagination {
     color: #55c3aa;
+}
+.ui.pagination.menu a.active.item {
+    color: #55c3aa;
+    font-weight: bold;
 }
